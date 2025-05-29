@@ -38,6 +38,6 @@ export interface Message {
     updated_at: string;
 };
 
-interface ConversationWithMessages extends Conversation {
+export interface ConversationWithMessages extends Conversation {
     messages: Message [];
 }

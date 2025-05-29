@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { User } from "../db/types.js";
-import { join_user_conversation_query } from "../db/find_queries.js";
+import { all_messages_query, join_user_conversation_query } from "../db/find_queries.js";
 import { create_conversation, create_message } from "../db/create_queries.js";
 
 export const sendMessage = async (req: Request, res: Response):Promise<any> => {
@@ -48,10 +48,30 @@ export const getMessages = async (req: Request, res: Response):Promise<any> => {
             return res.status(400).json({error:"There is no senderID"});
         };
 
+        if (!userToChatId) {
+            return res.status(400).json({error:"There is no userToChatID"});
+        };
 
+        const conversation = await join_user_conversation_query(senderId, userToChatId);
+    
+        if (!conversation) { 
+            return res.status(400).json({error:"There is conversation between the two ids"});
+        };
 
+        const getMessages = await all_messages_query(conversation.id);
+        
+        if (!getMessages) {
+            return res.status(200).json([]);
+        };
 
-    } catch (error) {
+        return res.status(200).json(getMessages.messages);
 
+    } catch (error:any ) {
+        console.log("getMessages() controller: ", error.message);
+        return res.status(500).json({ error: "Internal server error" });
     }
+};
+
+export const getConversations = async () => {
+
 };
