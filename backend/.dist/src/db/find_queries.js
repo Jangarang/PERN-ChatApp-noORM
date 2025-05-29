@@ -25,7 +25,6 @@ export const find_by_id_query = async (id) => {
     }
     ;
 };
-//OVERLOADED FUNCTION 
 export const join_user_conversation_query = async (userId1, userId2) => {
     try {
         // const result = await db.query(`
@@ -39,12 +38,11 @@ export const join_user_conversation_query = async (userId1, userId2) => {
         // `);
         const result = await db.query(`
             SELECT uc.conversation_id
-            FROM user_conversation uc
-            WHERE uc.conversation_id = $1
-             AND uc.user_id IN ($2, $3)
+            FROM user_conversations uc
+            WHERE uc.user_id IN ($2, $3)
             GROUP BY uc.conversation_id
             HAVING COUNT(DISTINCT uc.user_id) = 2;
-        `);
+        `, [userId1, userId2]);
         return result.rows[0];
     }
     catch (error) {

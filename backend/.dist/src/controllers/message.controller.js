@@ -8,10 +8,11 @@ export const sendMessage = async (req, res) => {
         if (!senderId) {
             return res.status(400).json({ error: "There is no senderID" });
         }
+        ;
         let conversation = await join_user_conversation_query(senderId, receiverId);
         if (!conversation) {
+            console.log("sendMessage() conversation doesn't between users. Creating...");
             conversation = await create_conversation(senderId, receiverId);
-            //console.log('sendMessage() conversation: ', conversation);
         }
         ;
         if (!conversation) {
@@ -28,5 +29,17 @@ export const sendMessage = async (req, res) => {
     catch (error) {
         console.log('Error in sendMessage() controller: ', error.message);
         return res.status(500).json({ error: "Internal server error" });
+    }
+};
+export const getMessages = async (req, res) => {
+    try {
+        const { id: userToChatId } = req.params;
+        const senderId = req.user?.id;
+        if (!senderId) {
+            return res.status(400).json({ error: "There is no senderID" });
+        }
+        ;
+    }
+    catch (error) {
     }
 };

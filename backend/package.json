@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch backend/src --exec tsx backend/src/index.ts",
+    "dev": "npx tsc && node .dist/src/index.js",
     "build": "",
     "start": "node backend/dist/src/index.js",
     "reset-db": ""
@@ -20,8 +20,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/pg": "^8.15.2",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.3",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
   "dependencies": {

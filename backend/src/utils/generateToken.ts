@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { Response } from 'express';
-import { User } from '../db/types.js';
+import type { Response } from 'express';
+import type { User } from '../db/types.js';
 
 
 const  generateAccessTokenAndCookie = (user: User, res: Response) => {

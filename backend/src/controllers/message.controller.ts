@@ -16,8 +16,8 @@ export const sendMessage = async (req: Request, res: Response):Promise<any> => {
         let conversation = await join_user_conversation_query(senderId, receiverId);
 
         if (!conversation) {
+            console.log("sendMessage() conversation doesn't between users. Creating...");
             conversation = await create_conversation(senderId, receiverId);
-            //console.log('sendMessage() conversation: ', conversation);
         
         };
 

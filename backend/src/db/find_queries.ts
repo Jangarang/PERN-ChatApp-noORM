@@ -29,8 +29,6 @@ export const find_by_id_query = async (id: string):Promise<User | null> => {
     };
 };
 
-
-//OVERLOADED FUNCTION 
 export const join_user_conversation_query = async (userId1: string, userId2: string):Promise<Conversation | null> => {
     try {
         // const result = await db.query(`
@@ -45,8 +43,7 @@ export const join_user_conversation_query = async (userId1: string, userId2: str
         const result = await db.query(`
             SELECT uc.conversation_id
             FROM user_conversations uc
-            WHERE uc.conversation_id = $1
-             AND uc.user_id IN ($2, $3)
+            WHERE uc.user_id IN ($2, $3)
             GROUP BY uc.conversation_id
             HAVING COUNT(DISTINCT uc.user_id) = 2;
         `, [userId1, userId2]);

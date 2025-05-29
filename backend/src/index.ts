@@ -1,8 +1,10 @@
 import "./config/env.js";
 import express from "express"
 import cors from "cors";
-import authRoutes from "./routes/auth.route.js";
-import messageRoutes from "./routes/message.route.js";
+import authRoutes from "./routes/auth.route.js"
+// import authRoutes from "@rout";
+import messageRoutes from "@/routes/message.route.js";
+//import messageRoutes from "./routes/message.route.js";
 import { dbConnection, dbSetup } from "./db/db.js";
 import { dbDropUsers, dbReset } from "./db/reset-db.js";
 import cookieParser from "cookie-parser";
@@ -19,12 +21,13 @@ app.use(express.json()); //parsing request data
 app.use("/api/auth",authRoutes);
 app.use("/api/messages",messageRoutes);
 
-/*DB connection*/
-await dbConnection();
+
 
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 });
+/*DB connection*/
+await dbConnection();
 
 // await dbSetup();
 //await dbDropUsers();

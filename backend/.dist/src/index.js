@@ -13,11 +13,11 @@ app.use(express.json()); //parsing request data
 /** Two different endpoints */
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
-/*DB connection*/
-await dbConnection();
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 });
+/*DB connection*/
+await dbConnection();
 // await dbSetup();
 //await dbDropUsers();
 //TODO where to put this? 
