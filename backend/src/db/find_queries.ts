@@ -44,12 +44,12 @@ export const join_user_conversation_query = async (userId1: string, userId2: str
         // `);
         const result = await db.query(`
             SELECT uc.conversation_id
-            FROM user_conversation uc
+            FROM user_conversations uc
             WHERE uc.conversation_id = $1
              AND uc.user_id IN ($2, $3)
             GROUP BY uc.conversation_id
             HAVING COUNT(DISTINCT uc.user_id) = 2;
-        `);
+        `, [userId1, userId2]);
 
         return result.rows[0];            
     } catch ( error: any ) {
@@ -57,3 +57,4 @@ export const join_user_conversation_query = async (userId1: string, userId2: str
         return null;
     }
 };
+
