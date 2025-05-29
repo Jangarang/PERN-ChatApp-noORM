@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { User } from "../db/types.js";
+import type { Request, Response } from "express";
+import type { User } from "../db/types.js";
 import { join_user_conversation_query } from "../db/find_queries.js";
 import { create_conversation, create_message } from "../db/create_queries.js";
 

@@ -1,5 +1,5 @@
 import db from "./db.js";
-import { Conversation, User } from "./types.js";
+import type { Conversation, User } from "./types.js";
 
 export const find_username_query = async (username: string | undefined):Promise<User | null>  => {
    try {

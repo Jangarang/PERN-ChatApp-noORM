@@ -1,5 +1,5 @@
 import db from "./db.js";
-import { Conversation, ConversationWithUsers, Message, NewUserData, User } from "./types.js";
+import type { Conversation, ConversationWithUsers, Message, NewUserData, User } from "./types.js";
 
 export const create_user = async (user: NewUserData): Promise<User | null> => {
     const values = Object.values(user);

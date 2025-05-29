@@ -16,7 +16,7 @@
 	/* -- Node options --*/
 	"moduleResolution": "NodeNext",
     "module": "NodeNext",
-    "outDir": "./dist",
+    "outDir": "./dist/src",
     "sourceMap": true,
     "lib": ["es2022"],
 
