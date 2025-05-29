@@ -1,0 +1,7 @@
+testing send messages
+
+signup johndoe
+signup janedoe
+login as johndoe
+
+send message to janedoe 
