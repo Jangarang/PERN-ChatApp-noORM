@@ -24,7 +24,9 @@ export const create_user = async (user: NewUserData): Promise<User | null> => {
 export const create_conversation = async (userId1: string, userId2: string):Promise<ConversationWithUsers | null> => {
     try{
         const conversationId = await db.query(`INSERT INTO conversations DEFAULT VALUES RETURNING id`);
+        // console.log(userId1, userId2);
         // console.log('conversationId', conversationId.rows[0].id);
+
         const result2 = await db.query(`
             INSERT INTO user_conversations (user_id, conversation_id)
             VALUES 
@@ -33,9 +35,9 @@ export const create_conversation = async (userId1: string, userId2: string):Prom
             ON CONFLICT DO NOTHING
             RETURNING *;
         `, [conversationId.rows[0].id, userId1, userId2]);
-            // console.log('create_conversation() rows: ', result2.rows);
+        // console.log('create_conversation() rows: ', result2.rows);
 
-        
+            
         return buildConversationWithUsers(result2.rows[0].conversation_id) ;
     } catch ( error: any ) {
         console.log("Error in create_conversation(): ", error.message);
@@ -58,6 +60,8 @@ export const create_message = async (senderId: string, conversationId: string, b
     };
 };
 
+
+//TODO to move out
 const buildConversationWithUsers = async (conversationId: string):Promise<ConversationWithUsers> => {
     const result = await db.query(`
         SELECT c.id, c.created_at, c.updated_at, u.id AS user_id, u.full_name, u.username, u.gender, u.profile_pic
@@ -67,7 +71,7 @@ const buildConversationWithUsers = async (conversationId: string):Promise<Conver
         WHERE c.id IN ($1)  
         `, [conversationId]);
 
-        console.log("buildConversationWithUsers query result: ", result.rows);
+        // console.log("buildConversationWithUsers query result: ", result.rows);
 
         let conversationsWithUsers: ConversationWithUsers;
         conversationsWithUsers = {
@@ -86,6 +90,6 @@ const buildConversationWithUsers = async (conversationId: string):Promise<Conver
                 profile_pic: row.profile_pic,
             });
         });
-        console.log("participants in the same conversation",);
+        // console.log("participants in the same conversation",);
     return conversationsWithUsers;
 };
