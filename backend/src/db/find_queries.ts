@@ -29,6 +29,9 @@ export const find_by_id_query = async (id: string):Promise<User | null> => {
     };
 };
 
+/*
+//TODO: rename
+*/
 export const join_user_conversation_query = async (userId1: string, userId2: string):Promise<Conversation | null> => {
     try {
         // console.log('join_user_conversation_query id1: ', userId1 );
@@ -71,6 +74,25 @@ export const all_messages_query = async (conversationId: string):Promise<Convers
     } catch ( error:any ) {
         console.log('all_messages_query error: ', error.message);
         return null;
+    };
+};
+
+export const find_users_query = async (userId: string) => {
+    try{
+       const result = await db.query(`
+           SELECT u.id, u.profile_pic, u.full_name
+           FROM users u 
+           JOIN user_conversations uc ON u.id = uc.user_id
+           WHERE uc.conversation_id IN (
+                SELECT conversation_id 
+                FROM user_conversations 
+                WHERE user_id = $1
+            ) 
+            AND user_id != $1
+        `,[userId]);
+        return result.rows[0]; 
+    } catch (error: any) {
+
     };
 };
 

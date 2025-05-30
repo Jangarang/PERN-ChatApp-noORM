@@ -23,7 +23,12 @@ export interface Conversation {
 export interface ConversationWithUsers extends Conversation {
     //conversation_id: string,
     participants: Users[];
+};
+
+export interface ConversationsWithUsers extends Omit<ConversationWithUsers, 'created_at' | 'updated_at'> {
 }
+
+
 
 interface UserWithConversations extends User {
     conversations: Conversation[];
