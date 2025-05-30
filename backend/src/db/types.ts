@@ -12,7 +12,10 @@ export interface User {
 };
 
 export type NewUserData = Omit<User,'id' | 'created_at' | 'updated_at'>;
+
 export type Users = Omit<User,'password' | 'created_at' | 'updated_at'>;
+
+export type SideBarUsersDisplay = Omit<User,'username'| 'gender' |'password' | 'created_at'| 'updated_at'>;
 
 export interface Conversation {
     id: string,
@@ -21,14 +24,12 @@ export interface Conversation {
 };
 
 export interface ConversationWithUsers extends Conversation {
-    //conversation_id: string,
     participants: Users[];
 };
 
-export interface ConversationsWithUsers extends Omit<ConversationWithUsers, 'created_at' | 'updated_at'> {
-}
-
-
+export interface GetUsers {
+    users: SideBarUsersDisplay[];
+};
 
 interface UserWithConversations extends User {
     conversations: Conversation[];

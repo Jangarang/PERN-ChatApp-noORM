@@ -1,7 +1,6 @@
 import '../config/env.js';
 import { Client } from 'pg';
 
-//console.log(process.env.DATABASE_CONNECTION_STRING);
 const db = new Client({
   connectionString: process.env.DATABASE_CONNECTION_STRING
 });

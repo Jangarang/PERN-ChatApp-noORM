@@ -2,12 +2,10 @@ import "./config/env.js";
 import express from "express"
 import cors from "cors";
 import authRoutes from "./routes/auth.route.js"
-// import authRoutes from "@rout";
 import messageRoutes from "@/routes/message.route.js";
-//import messageRoutes from "./routes/message.route.js";
-import { dbConnection, dbSetup } from "./db/db.js";
-import { dbDropUsers, dbReset } from "./db/reset-db.js";
+import { dbConnection} from "./db/db-init.js";
 import cookieParser from "cookie-parser";
+import '@/utils/dbTester.js';
 
 const app = express();
 
@@ -26,56 +24,6 @@ app.use("/api/messages",messageRoutes);
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 });
+
 /*DB connection*/
 await dbConnection();
-
-// await dbSetup();
-//await dbDropUsers();
-
-//TODO where to put this? 
-if (process.env.NODE_ENV === 'development') {
-  process.stdin.on('data', async (data) => {
-    const input = data.toString().trim();
-    if (input === 'drop') {
-      console.log('Dropping tables...');
-       dbReset().catch((err) => {
-            console.error('Error dropping tables: ', err);
-            process.exit(1);
-        });
-      console.log('Tables dropped 🚨');
-    }
-  });
-};
-
-if (process.env.NODE_ENV === 'development') {
-    process.stdin.on('data', async (data) => {
-        const input = data.toString().trim();
-        if (input === 'create tables'){
-            console.log('Creating tables...');
-            dbSetup().catch((err) => {
-                console.error('Error setting up tables: ', err);
-                process.exit(1);
-            });
-            console.log('Tables created!');
-        }
-    });
-};
-
-if (process.env.NODE_ENV === 'development') {
-    process.stdin.on('data', async (data) => {
-        const input = data.toString().trim();
-        if (input === 'reset'){
-            console.log('Dropping tables');
-            await dbReset().catch((err) => {
-              console.error('Error dropping tables: ', err);
-              process.exit(1);
-            });
-            console.log('Creating tables')
-            await dbSetup().catch((err) => {
-                console.error('Error dropping tables: ', err);
-                process.exit(1);
-            });
-            console.log('Tables created!');
-        }
-    });
-};

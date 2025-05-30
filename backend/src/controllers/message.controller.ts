@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
-import type { User } from "../db/types.js";
-import { all_messages_query, find_users_query, join_user_conversation_query } from "../db/find_queries.js";
+import { find_users_query } from "../db/find_user_queries.js";
+import { find_conversations_between_users_query} from "@/db/find_conversations_queries.js";
+import { all_messages_query } from "@/db/find_msg_queries.js";
 import { create_conversation, create_message } from "../db/create_queries.js";
 
 export const sendMessage = async (req: Request, res: Response):Promise<any> => {
@@ -13,7 +14,7 @@ export const sendMessage = async (req: Request, res: Response):Promise<any> => {
             return res.status(400).json({error:"There is no senderID"});
         };
 
-        let conversation = await join_user_conversation_query(senderId, receiverId);
+        let conversation = await find_conversations_between_users_query(senderId, receiverId);
 
         if (!conversation) {
             console.log("sendMessage() conversation doesn't exist between users. Creating...");
@@ -52,7 +53,7 @@ export const getMessages = async (req: Request, res: Response):Promise<any> => {
             return res.status(400).json({error:"There is no userToChatID"});
         };
 
-        const conversation = await join_user_conversation_query(senderId, userToChatId);
+        const conversation = await find_conversations_between_users_query(senderId, userToChatId);
     
         if (!conversation) { 
             return res.status(400).json({error:"getMessages() There is conversation between the two ids"});

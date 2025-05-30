@@ -1,5 +1,5 @@
-import db from "./db.js";
-import type { Conversation, ConversationWithUsers, Message, NewUserData, User } from "./types.js";
+import db from "./db-init.js";
+import type { ConversationWithUsers, Message, NewUserData, User } from "./types.js";
 
 export const create_user = async (user: NewUserData): Promise<User | null> => {
     const values = Object.values(user);
@@ -16,8 +16,10 @@ export const create_user = async (user: NewUserData): Promise<User | null> => {
         return result.rows[0];
 
     } catch (error: any) {
+
         console.log('create_user() error: ', error.message);
         return null;
+
     };
 }
 
@@ -36,13 +38,15 @@ export const create_conversation = async (userId1: string, userId2: string):Prom
             RETURNING *;
         `, [conversationId.rows[0].id, userId1, userId2]);
         // console.log('create_conversation() rows: ', result2.rows);
-
             
-        return buildConversationWithUsers(result2.rows[0].conversation_id) ;
+        return buildConversationWithUsers(result2.rows[0].conversation_id);
+
     } catch ( error: any ) {
+
         console.log("Error in create_conversation(): ", error.message);
         return null;
-    } 
+
+    }; 
 };
 
 export const create_message = async (senderId: string, conversationId: string, body: string):Promise<Message | null>  => {
@@ -80,6 +84,7 @@ const buildConversationWithUsers = async (conversationId: string):Promise<Conver
             updated_at: result.rows[0].updated_at,
             participants: [],
         };
+
         result.rows.forEach((row: any) => {
 
             conversationsWithUsers.participants.push({
@@ -90,6 +95,8 @@ const buildConversationWithUsers = async (conversationId: string):Promise<Conver
                 profile_pic: row.profile_pic,
             });
         });
+
         // console.log("participants in the same conversation",);
+
     return conversationsWithUsers;
 };

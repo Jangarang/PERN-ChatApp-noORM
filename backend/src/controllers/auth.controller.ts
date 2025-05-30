@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
 import  generateAccessTokenAndCookie from '../utils/generateToken.js';
 import jwt from 'jsonwebtoken';
-import { find_username_query } from "../db/find_queries.js";
+import { find_username_query } from "../db/find_user_queries.js";
 import { create_user } from "../db/create_queries.js";
 import type { NewUserData } from "../db/types.js";
 

@@ -1,7 +1,7 @@
 import jwt,  {type JwtPayload } from 'jsonwebtoken';
 
 import type { Request, Response, NextFunction } from 'express';
-import { find_by_id_query, find_username_query } from '../db/find_queries.js';
+import { find_by_id_query } from '../db/find_user_queries.js';
 import type { User } from '../db/types.js';
 
 interface DecodedToken extends JwtPayload {
