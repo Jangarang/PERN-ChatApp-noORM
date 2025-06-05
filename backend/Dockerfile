@@ -1,13 +1,12 @@
-FROM node:18
+FROM node:20
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
 
-COPY . .
+COPY . ./
 
-EXPOSE 5000
-
+# ENTRYPOINT ["nodemon", "/usr/src/app/index.ts"]
 CMD ["npm","run","dev"]

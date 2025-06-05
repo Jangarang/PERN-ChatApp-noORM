@@ -12,6 +12,8 @@ services:
   backend:
     build: 
       context: ./backend # Path to the backend directory, where Dockerfile is located  
+    volumes: 
+      - ./backend/src:/app/src
     ports: 
     - "5000:5000"
     # env_file:

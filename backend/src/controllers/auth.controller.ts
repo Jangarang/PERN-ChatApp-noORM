@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
 import  generateAccessTokenAndCookie from '../utils/generateToken.js';
 import jwt from 'jsonwebtoken';
-import { find_username_query } from "../db/find_user_queries.js";
+import { find_by_id_query, find_username_query } from "../db/find_user_queries.js";
 import { create_user } from "../db/create_queries.js";
 import type { NewUserData } from "../db/types.js";
 
@@ -75,7 +75,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         if (!user) {
             return res.status(400).json({error: "User does not exist"});
         };
-        console.log('login user ID: ', user.id);
+        console.log('-----Login User ID: ', user.id, '------');
         const isPasswordCorrect = await bcryptjs.compare(password, user.password);
 
         if (!isPasswordCorrect) {
@@ -119,9 +119,10 @@ export const tokenRefresh = async (req: Request, res: Response): Promise<any> =>
 
 export const getMe = async (req: Request, res: Response): Promise<any> => {
     try {
-    
-        const user = await find_username_query(req.user?.id);
-        
+        console.log("req.user: ", req.user); 
+        //const user = await find_username_query(req.user?.id);
+        const user = await find_by_id_query(req.user?.id);
+
         if (!user ) {
             return res.status(404).json({error:"User not found"});
         };

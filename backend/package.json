@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx ./src/index.ts",
+    "dev": "npx nodemon --legacy-watch --watch src --ext ts,tsx --exec \"npx tsx ./src/index.ts\"",
     "build": "npx tsc",
     "start": "node backend/dist/src/index.js",
     "reset-db": ""

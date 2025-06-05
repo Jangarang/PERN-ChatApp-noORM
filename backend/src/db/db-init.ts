@@ -1,8 +1,9 @@
 import '../config/env.js';
 import pg from 'pg';
 
+
 const db = new pg.Client({
-  //connectionString: process.env.DATABASE_CONNECTION_STRING
+  // connectionString: process.env.DATABASE_CONNECTION_STRING
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,

@@ -1,5 +1,5 @@
 import jwt,  {type JwtPayload } from 'jsonwebtoken';
-
+import { ACCESS_TOKEN } from '@/constants.js';
 import type { Request, Response, NextFunction } from 'express';
 import { find_by_id_query } from '../db/find_user_queries.js';
 import type { User } from '../db/types.js';
@@ -20,7 +20,8 @@ declare global {
 const protectRoute = async (req: Request, res: Response, next: NextFunction):Promise<any> => {
 
     try {
-        const token = req.cookies.jwt;
+        console.log("cookies ", req.cookies);
+        const token = req.cookies.accessTokenCookie;
         console.log(token); 
         if (!token) {
             return res.status(401).json({error: "Unauthorized - No token provided"});
