@@ -3,7 +3,7 @@ import express from "express"
 import cors from "cors";
 import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "@/routes/message.route.js";
-import { dbConnection} from "./db/db-init.js";
+import { dbConnection, dbSetup} from "./db/db-init.js";
 import cookieParser from "cookie-parser";
 import '@/utils/dbTester.js';
 

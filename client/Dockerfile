@@ -1,6 +1,6 @@
 FROM node:18
 
-WORKDIR /app/client
+WORKDIR /app
 
 # Copy package.json and install dependencies first (to cache them)
 COPY package*.json ./

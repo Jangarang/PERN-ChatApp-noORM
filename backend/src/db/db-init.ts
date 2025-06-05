@@ -1,8 +1,13 @@
 import '../config/env.js';
-import { Client } from 'pg';
+import pg from 'pg';
 
-const db = new Client({
-  connectionString: process.env.DATABASE_CONNECTION_STRING
+const db = new pg.Client({
+  //connectionString: process.env.DATABASE_CONNECTION_STRING
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 export const dbConnection = async () => {
