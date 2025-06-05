@@ -1,6 +1,14 @@
 version: '3.8'
 
-services: 
+services:
+  frontend:
+    build: 
+      context: ./frontend
+    ports: 
+      - "5173:5173"
+    networks: 
+      - app-network   
+    
   backend:
     build: 
       context: ./backend # Path to the backend directory, where Dockerfile is located  
