@@ -15,7 +15,7 @@ export const find_username_query = async (username: string | undefined):Promise<
     };
 };
 
-export const find_by_id_query = async (id: string | undefined ):Promise<User | null> => {
+export const find_by_id_query = async (id: string):Promise<User | null> => {
     try {
         const result = await db.query(`
         SELECT * FROM users WHERE id = $1 LIMIT 1 
@@ -28,8 +28,6 @@ export const find_by_id_query = async (id: string | undefined ):Promise<User | n
         return null;
     };
 };
-
-
 
 export const find_users_query = async (userId: string) => {
     try{

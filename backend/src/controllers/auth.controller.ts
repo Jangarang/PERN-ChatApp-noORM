@@ -82,8 +82,13 @@ export const login = async (req: Request, res: Response): Promise<any> => {
             return res.status(400).json({error: "Invalid Credentials"});
         };
 
-        generateAccessTokenAndCookie(user, res); //accessToken
+        const accessT = generateAccessTokenAndCookie(user, res); //accessToken
+        const accessDecoded = jwt.decode(accessT);
+        var expiry;
 
+        if (typeof accessDecoded === 'object' && accessDecoded !== null && 'exp' in accessDecoded && accessDecoded.exp !== undefined) {
+            expiry = accessDecoded.exp * 1000; // success!
+        }
         const refereshToken = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, { expiresIn: "1d"})
         
         res.cookie(REFRESH_TOKEN, refereshToken), {
@@ -92,12 +97,15 @@ export const login = async (req: Request, res: Response): Promise<any> => {
             secure: process.env.NODE_ENV !== "development"
         };
 
-        res.status(200).json({
+        res.status(200).json(
+        {
             id: user.id,
             fullName: user.full_name,
             username: user.username,
-            profilePic: user.profile_pic
-        });
+            profilePic: user.profile_pic,
+            expiry: expiry
+        },
+    );
                 
     } catch (error: any){
         console.log("Error in login controller", error.message);
@@ -115,13 +123,41 @@ export const logout = async (req: Request, res: Response) => {
     };
 };
 
-export const tokenRefresh = async (req: Request, res: Response): Promise<any> => {};
+/**
+ * API endpoint to be called when acccess token runs out
+ * @param req 
+ * @param res 
+ */
+export const accessRefresh = async (req: Request, res: Response): Promise<any> => {
+    const { refreshTokenCookie } = req.cookies;
+    console.log(req.cookies);
+    try {
+        if (!refreshTokenCookie) {
+            return res.status(403).json({error: "refresh token cookie doesn't exist"});
+        }
+
+        jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!, (err: Error | null, user: any) => {
+            if (err) throw { status: 403, message: "Verification failed" };
+                
+            const accessToken = generateAccessTokenAndCookie(user, res);
+            console.log(accessToken);
+            return res.status(200).json({accessToken});
+        });
+
+      
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 export const getMe = async (req: Request, res: Response): Promise<any> => {
     try {
         console.log("req.user: ", req.user); 
+        let user;
         //const user = await find_username_query(req.user?.id);
-        const user = await find_by_id_query(req.user?.id);
+        if (req.user && req.user.id) {
+            user = await find_by_id_query(req.user?.id);
+        }
 
         if (!user ) {
             return res.status(404).json({error:"User not found"});

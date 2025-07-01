@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login, logout, signup, tokenRefresh, getMe } from "../controllers/auth.controller.js";
+import { login, logout, signup, getMe, accessRefresh } from "../controllers/auth.controller.js";
 import protectRoute from "../middleware/protectRoute.js";
 
 const router = Router();
@@ -11,7 +11,7 @@ router.post("/login",login);
 
 router.post("/logout",logout);
 
-router.get("/generate-token",tokenRefresh);
+router.get("/generate-token",accessRefresh);
 
 router.get("/me", protectRoute , getMe);
 

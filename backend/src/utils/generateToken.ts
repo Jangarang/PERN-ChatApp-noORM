@@ -7,7 +7,7 @@ const  generateAccessTokenAndCookie = (user: User, res: Response) => {
         expiresIn: "30m"
     });
 
-    console.log('access token: ', token);
+    console.log('/utils/generateToken access token: ', token);
     res.cookie("accessTokenCookie", token, {
         httpOnly: true, // prevent XSS cors site scripting
         sameSite: "strict", // CSRF

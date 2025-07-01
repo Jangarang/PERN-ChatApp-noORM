@@ -9,11 +9,19 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    proxy: {
-      
+    port: 5173,
+    strictPort: true,
+    watch:{
+      usePolling:true,
+    },
+    proxy: { 
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://backend:5000",
+        changeOrigin: true,
       }
+    },
+    hmr: {
+      clientPort: 5173,
     }
   }
 })
