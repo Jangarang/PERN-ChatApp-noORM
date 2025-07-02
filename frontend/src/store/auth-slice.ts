@@ -22,8 +22,7 @@ interface AuthState {
 // Correctly typed initial state
 const initialState: AuthState = {
     authUser: null,
-    isAuthenticated: false,
-    // accessToken: null,
+    isAuthenticated: false, 
     tokenExpiry: 0,
 };
 

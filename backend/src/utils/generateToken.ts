@@ -4,7 +4,7 @@ import type { User } from '../db/types.js';
 
 const  generateAccessTokenAndCookie = (user: User, res: Response) => {
     const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET!,  {
-        expiresIn: "30m"
+        expiresIn: "2m"
     });
 
     console.log('/utils/generateToken access token: ', token);

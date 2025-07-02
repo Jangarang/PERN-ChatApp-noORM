@@ -1,5 +1,7 @@
-import type { AppDispatch } from '.';
+import type { AppDispatch } from './index';
+import { isTokenExpired } from '../utils/helpers/tokenUtils';
 import { authActions } from "./auth-slice";
+import { store } from './index';
 
 /** This is automatic logouts and checking on each request?*/
 export const authThunk = async () => {
@@ -32,4 +34,15 @@ export const authThunk = async () => {
             throw new Error(`${error}`);
         };
     };    
+};
+
+
+export const checkTokenExpiryAndLogoutThunk = () => {
+  return (dispatch: AppDispatch) => {
+    const expired = store.getState().auth.tokenExpiry;
+    console.log(`[Thunk] Time left: ${expired}ms`);
+    if (isTokenExpired(expired)) {
+      dispatch(authActions.logout());
+    }
+  };
 };

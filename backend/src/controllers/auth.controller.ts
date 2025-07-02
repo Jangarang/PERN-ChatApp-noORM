@@ -83,11 +83,13 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         };
 
         const accessT = generateAccessTokenAndCookie(user, res); //accessToken
-        const accessDecoded = jwt.decode(accessT);
+        console.log('accessToken: ', accessT);
+        const accessDecoded = jwt.decode(accessT) as jwt.JwtPayload;
+        console.log(accessDecoded);
         var expiry;
-
+        
         if (typeof accessDecoded === 'object' && accessDecoded !== null && 'exp' in accessDecoded && accessDecoded.exp !== undefined) {
-            expiry = accessDecoded.exp * 1000; // success!
+            expiry = accessDecoded.exp * 1000;
         }
         const refereshToken = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, { expiresIn: "1d"})
         
