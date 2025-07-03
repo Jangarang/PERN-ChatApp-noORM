@@ -11,7 +11,7 @@ export const signup = async (req: Request, res: Response,next: NextFunction ): P
     
     try {
         const {fullName, username, password, confirmPassword, gender} = req.body
-        
+
         if (!fullName || !username || !password || !confirmPassword || !gender) {
         
             return res.status(400).json({error: "Please fill in all fields"});
@@ -33,11 +33,14 @@ export const signup = async (req: Request, res: Response,next: NextFunction ): P
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
         const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
 
+        // Make this a separate function?
+        const reformatGender = gender === "male" ? "MALE" : "FEMALE";
+
         const newUserObj: NewUserData = {
             full_name: fullName,
             username: username,
             password: hashedPassword,
-            gender: gender,
+            gender: reformatGender,
             profile_pic: gender === "male" ? boyProfilePic : girlProfilePic
         }
 
