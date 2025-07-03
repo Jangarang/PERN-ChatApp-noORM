@@ -1,3 +1,4 @@
+import 'axios';
 //This doesn't work?
 // export const NotificationStatusEnum = {
 //   Pending: "Pending",
@@ -14,3 +15,8 @@ export interface NotificationType {
     message: string | null,
 };
 
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    errorContext?: string; // ✅ add your custom field here
+  }
+}
