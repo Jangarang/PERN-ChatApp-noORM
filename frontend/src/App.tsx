@@ -4,17 +4,14 @@ import { createBrowserRouter,
   RouterProvider, 
   //Routes 
 } from "react-router";
-
-
-//import type { RootState } from "./store";
-//import RootLayout from "./pages/Root";
+import { useSelector } from "react-redux";
+import type { RootState } from "./store";
 import SignUp from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useTokenWatcher from "./hooks/useTokenWatcher";
-
-
+import Notification from './components/UI/Notification';
 
 const router = createBrowserRouter([
   {
@@ -38,9 +35,19 @@ const router = createBrowserRouter([
 function App() {
   // const authUser = useSelector((state: RootState) => state.auth.authUser);
   useTokenWatcher();
+  const notification = useSelector((state: RootState) => state.ui.notification);
+
 
   return <>
-  <RouterProvider router={router}/></>
+    {notification && (
+      <Notification 
+        status={notification.status} 
+        title={notification.title}
+        message={notification.message}
+      > 
+      </Notification>)}
+    <RouterProvider router={router}/>
+  </>
   // <div className="p-4 h-screen flex items-center justify-center">
   //     <Routes>
   //       {/* { !authUser ? (<Navigate to={"/login"}/>) : (<Route path="/" element={<Home/>}/>)} */}
