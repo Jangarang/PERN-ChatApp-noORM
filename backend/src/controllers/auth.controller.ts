@@ -177,7 +177,7 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
             username: user.username,
             profilePic: user.profile_pic,
             gender: user.gender,
-    
+            expiry: user.expiry, 
         });
     
     } catch ( error: any ) {

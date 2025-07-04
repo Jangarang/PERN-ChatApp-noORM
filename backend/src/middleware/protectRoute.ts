@@ -2,7 +2,7 @@ import jwt,  {type JwtPayload } from 'jsonwebtoken';
 import { ACCESS_TOKEN } from '@/constants.js';
 import type { Request, Response, NextFunction } from 'express';
 import { find_by_id_query } from '../db/find_user_queries.js';
-import type { User } from '../db/types.js';
+import type { UserExpiry } from '@/db/types.js';
 
 interface DecodedToken extends JwtPayload {
     userId: string;
@@ -12,7 +12,7 @@ interface DecodedToken extends JwtPayload {
 declare global {
     namespace Express {
         export interface Request {
-            user?: User
+            user?: UserExpiry
         }
 
     }
@@ -55,7 +55,7 @@ const protectRoute = async (req: Request, res: Response, next: NextFunction):Pro
         if (typeof decoded === 'object' && decoded !== null && 'exp' in decoded && decoded.exp !== undefined) {
            req.user = {
             ...user,
-            // expiry: decoded.exp * 1000
+            expiry: decoded.exp * 1000
         }
         }
         

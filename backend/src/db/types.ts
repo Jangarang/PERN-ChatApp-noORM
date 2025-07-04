@@ -11,6 +11,10 @@ export interface User {
     updated_at: string;
 };
 
+export interface UserExpiry extends Omit<User, 'password' | 'created_at' | 'updated_at'> {
+    expiry: number;
+}
+
 export type NewUserData = Omit<User,'id' | 'created_at' | 'updated_at'>;
 
 export type Users = Omit<User,'password' | 'created_at' | 'updated_at'>;

@@ -1,5 +1,5 @@
 import db from "./db-init.js";
-import type { User } from "./types.js";
+import type { User, UserExpiry } from "./types.js";
 
 export const find_username_query = async (username: string | undefined):Promise<User | null>  => {
    try {
@@ -15,7 +15,12 @@ export const find_username_query = async (username: string | undefined):Promise<
     };
 };
 
-export const find_by_id_query = async (id: string):Promise<User | null> => {
+/**
+ *  Purpose: Find if a user exists in database. 
+ * @param id 
+ * @returns 
+ */
+export const find_by_id_query = async (id: string):Promise<UserExpiry | null> => {
     try {
         const result = await db.query(`
         SELECT * FROM users WHERE id = $1 LIMIT 1 
