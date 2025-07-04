@@ -16,19 +16,24 @@ const useTokenWatcher = (intervalMs = 30_00 ) => {
     useEffect(()=> {
         console.log("Page Loaded");
         
-        if (authStatus === 'idle') {
+        if (authStatus === 'loading') {
             dispatch(authThunk()); 
         };
 
     }, []);
 
     useEffect(()=> {
-       if (!isAuthenticated || expired === 0) {
+       if (!isAuthenticated || expired === 0 ) {
         console.log("[Hook] Waiting for auth to complete...");
         return;
        }
        console.log("[Hook] Auth Ready starting expiry checker")
         const interval = setInterval(() => {
+            if (!isAuthenticated || expired === 0 ) {
+                console.log('[Hook] Stopping interval - user logged out or expired removed');
+                clearInterval(interval);
+                return;
+            }
             console.log('[Hook] Checking token expiry. Expiry in: ', tokenTimeLeft(expired));
             dispatch(checkTokenExpiryAndLogoutThunk());
         }, intervalMs)

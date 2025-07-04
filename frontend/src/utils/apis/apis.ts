@@ -14,11 +14,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
     (response) => {
-        console.log('response: ',response)
+        //console.log('[interceptor] response: ',response)
         return response;
     },
     async function (error) {
-        
+        console.log('[interceptor] error'); 
         const status = error.response?.status;
         const originalRequest = error.config;
         
@@ -31,22 +31,27 @@ axiosInstance.interceptors.response.use(
         // console.log(errorContext);
         // console.log('Error Reason', errorReason);
 
-        if (status === 403 && !originalRequest) {
+        if (status === 403 && !originalRequest._retry) {
             originalRequest._retry= true;
             try {
-                generateToken();
-                return axiosInstance(originalRequest);
+                console.log("[Interceptor] Generate new accessToken");
+                // generateAccessToken();
+                // return axiosInstance(originalRequest);
             }catch(refreshError) {
                 console.error("Token refresh failed: ", refreshError);
             }
         }
         else if (status >= 400 && status < 500) {
-           store.dispatch(uiActions.showNotification({
+            
+            console.log('[interceptor] else if');
+
+            store.dispatch(uiActions.showNotification({
                 status: NotificationStatusEnum.Error,
                 title: 'Error: ',
                 message: `${errorContext} - ${errorReason}`,
            })) 
         }
+
         else if ( status >= 500 ) {
             console.log('skip');
         }
@@ -55,7 +60,7 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-export const generateToken = async () => {
+export const generateAccessToken = async () => {
     try {
         await axiosInstance.get(`/auth/generate-token`, {
             withCredentials: true,

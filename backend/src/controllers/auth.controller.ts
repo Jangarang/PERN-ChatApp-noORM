@@ -2,7 +2,7 @@ import { REFRESH_TOKEN } from "../constants.js";
 import type { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
 import  generateAccessTokenAndCookie from '../utils/generateToken.js';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { find_by_id_query, find_username_query } from "../db/find_user_queries.js";
 import { create_user } from "../db/create_queries.js";
 import type { NewUserData } from "../db/types.js";
@@ -92,11 +92,12 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         //console.log(accessDecoded);
         var expiry;
         
+        // Make this reusable
         if (typeof accessDecoded === 'object' && accessDecoded !== null && 'exp' in accessDecoded && accessDecoded.exp !== undefined) {
             expiry = accessDecoded.exp * 1000;
         }
         const refereshToken = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, 
-            { expiresIn: "1d"})
+            { expiresIn: "45s"})
         
         res.cookie(REFRESH_TOKEN, refereshToken), {
             httpOnly: true,
@@ -140,15 +141,24 @@ export const accessRefresh = async (req: Request, res: Response): Promise<any> =
     // console.log(req.cookies);
     try {
         if (!refreshTokenCookie) {
+            console.log('refresh Token Expired');
             return res.status(403).json({error: "refresh token cookie doesn't exist"});
         }
 
         jwt.verify(refreshTokenCookie, process.env.JWT_SECRET!, (err: Error | null, user: any) => {
-            if (err) throw { status: 403, message: "Verification failed" };
+            if (err) {
+                return res.status(403).json({ message: "Verification failed" });
+            }
                 
             const accessToken = generateAccessTokenAndCookie(user, res);
+            const accessDecoded = jwt.decode(accessToken) as jwt.JwtPayload;
+            var expiry;
+            if (typeof accessDecoded === 'object' && accessDecoded !== null && 'exp' in accessDecoded && accessDecoded.exp !== undefined) {
+                expiry = accessDecoded.exp * 1000;
+            }   
+            
             console.log(accessToken);
-            return res.status(200).json({accessToken});
+            return res.status(200).json({expiry: expiry});
         });
 
       

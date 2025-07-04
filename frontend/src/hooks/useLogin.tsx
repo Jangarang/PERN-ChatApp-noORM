@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/auth-slice';
 import { uiActions } from '../store/ui-slice';
@@ -9,6 +8,7 @@ const useLogin = () => {
     const dispatch = useDispatch();
 
     const login = async (username: string, password: string) => {
+        // Why do I have this?
         dispatch(uiActions.showNotification({
                 status: NotificationStatusEnum.Pending,
                 title: 'Sending...',

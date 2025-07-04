@@ -17,7 +17,6 @@ const Login = () => {
         e.preventDefault();
         const success = await login(inputs.username, inputs.password);
 		if(success) {
-			console.log('should navigate');
 			navigate('/');
 		}
     };

@@ -10,13 +10,14 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const authUser = useSelector((state: RootState) => state.auth);
 
-    if (authUser.authStatus === 'idle' || authUser.authStatus === 'loading') {
-        console.log('loading spinner or something here');
+    if (authUser.authStatus === 'loading') {
+        //'loading spinner or something here');
         // this causes another render RIGHT
         return <div>Loading...</div>; 
     }
 
-    if (!authUser.isAuthenticated) {
+    // if (!authUser.isAuthenticated) {
+    if (authUser.authStatus === 'unauthenticated') {
         return <Navigate to="/login" replace />;
     }
 

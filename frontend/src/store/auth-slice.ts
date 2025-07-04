@@ -8,14 +8,10 @@ interface AuthUser {
     gender:string
 }
 
-// interface DecodedJWT = {
-
-// }
 export const AuthStatus = {
-    Idle: 'idle',
+    Unauthenticated: 'unauthenticated',
     Loading: 'loading',
-    Fulfilled: 'fulfilled',
-    Failed: 'failed'
+    Authenticated: 'authenticated',
 } as const;
 
 //HUH?
@@ -31,8 +27,8 @@ interface AuthState {
 
 const initialState: AuthState = {
     authUser: null,
-    isAuthenticated: false, 
-    authStatus: 'idle',
+    isAuthenticated: false, //TODO remove this 
+    authStatus: 'loading',
     tokenExpiry: 0,
 };
 
@@ -43,7 +39,8 @@ const authSlice = createSlice({
         setAuthuser: (state, action: PayloadAction<AuthUser>) => {
             if (action.payload !== null) {
                 state.authUser = action.payload;
-                state.isAuthenticated = true;    
+                state.isAuthenticated = true;
+                state.authStatus = 'authenticated'; 
             }
         },
         setTokenExpiry: (state, action: PayloadAction<number>) => {
@@ -53,7 +50,7 @@ const authSlice = createSlice({
             state.authStatus = action.payload;
         },
         logout: (state) => {
-            state.authStatus = 'idle';
+            state.authStatus = 'unauthenticated';
             state.authUser = null;
             state.tokenExpiry = 0;
             state.isAuthenticated = false;
