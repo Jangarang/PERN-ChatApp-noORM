@@ -1,18 +1,25 @@
 import { useState } from 'react';
 import { Link } from "react-router";
 import useLogin from "../hooks/useLogin";
+import { useNavigate } from 'react-router';
 
 const Login = () => {
-    const [inputs, setInputs] = useState({
+	const navigate = useNavigate();
+
+	const [inputs, setInputs] = useState({
         username: "",
         password: "",
     });
 
     const { login } = useLogin();
 
-    const handleSubmitForm = (e: React.FormEvent) => {
+    const handleSubmitForm = async (e: React.FormEvent) => {
         e.preventDefault();
-        login(inputs.username, inputs.password);
+        const success = await login(inputs.username, inputs.password);
+		if(success) {
+			console.log('should navigate');
+			navigate('/');
+		}
     };
 
     return (

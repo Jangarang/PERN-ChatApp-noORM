@@ -25,8 +25,8 @@
 		"@/*": ["src/*"]
 		},
 	},
-
-	"include": ["./src/**/*"], // Specifies which files to include when compiling your project.
+    "typeRoots": ["./src/types"],
+	"include": ["./src/**/*", "./src/types"], // Specifies which files to include when compiling your project.
 	"exclude": ["node_modules", "**/*.spec.ts"] // Specifies which files to exclude when compiling your project.
 }
 

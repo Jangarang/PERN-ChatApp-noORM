@@ -76,7 +76,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
          const user = await find_username_query(username);
 
         if (!user) {
-            return res.status(400).json({error: "User does not exist"});
+            console.log('[controllers] login(): user does not exist')
+            return res.status(400).json({error: "Invalid Credentials"});
         };
         console.log('-----Login User ID: ', user.id, '------');
         const isPasswordCorrect = await bcryptjs.compare(password, user.password);
@@ -86,15 +87,16 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         };
 
         const accessT = generateAccessTokenAndCookie(user, res); //accessToken
-        console.log('accessToken: ', accessT);
+        //console.log('accessToken: ', accessT);
         const accessDecoded = jwt.decode(accessT) as jwt.JwtPayload;
-        console.log(accessDecoded);
+        //console.log(accessDecoded);
         var expiry;
         
         if (typeof accessDecoded === 'object' && accessDecoded !== null && 'exp' in accessDecoded && accessDecoded.exp !== undefined) {
             expiry = accessDecoded.exp * 1000;
         }
-        const refereshToken = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, { expiresIn: "1d"})
+        const refereshToken = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, 
+            { expiresIn: "1d"})
         
         res.cookie(REFRESH_TOKEN, refereshToken), {
             httpOnly: true,
@@ -135,7 +137,7 @@ export const logout = async (req: Request, res: Response) => {
  */
 export const accessRefresh = async (req: Request, res: Response): Promise<any> => {
     const { refreshTokenCookie } = req.cookies;
-    console.log(req.cookies);
+    // console.log(req.cookies);
     try {
         if (!refreshTokenCookie) {
             return res.status(403).json({error: "refresh token cookie doesn't exist"});
@@ -160,6 +162,7 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
         console.log("req.user: ", req.user); 
         let user;
         //const user = await find_username_query(req.user?.id);
+        //I didn't need this?
         if (req.user && req.user.id) {
             user = await find_by_id_query(req.user?.id);
         }
@@ -172,7 +175,9 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
             id: user.id,
             fullName: user.full_name,
             username: user.username,
-            profilePic: user.profile_pic
+            profilePic: user.profile_pic,
+            gender: user.gender,
+    
         });
     
     } catch ( error: any ) {

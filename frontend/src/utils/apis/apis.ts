@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { store} from '../../store';
 import { uiActions } from '../../store/ui-slice';
+import { authActions } from '../../store/auth-slice';
 import { NotificationStatusEnum } from '../../types/enum';
 // import {store} from '../../store/index';
 // import { authActions } from '../../store/auth-slice';
@@ -26,9 +27,9 @@ axiosInstance.interceptors.response.use(
 
         console.log('status',status)
  
-        console.log(originalRequest);
-        console.log(errorContext);
-        console.log('Error Reason', errorReason);
+        // console.log(originalRequest);
+        // console.log(errorContext);
+        // console.log('Error Reason', errorReason);
 
         if (status === 403 && !originalRequest) {
             originalRequest._retry= true;
@@ -39,12 +40,15 @@ axiosInstance.interceptors.response.use(
                 console.error("Token refresh failed: ", refreshError);
             }
         }
-        else if (status >= 400) {
+        else if (status >= 400 && status < 500) {
            store.dispatch(uiActions.showNotification({
                 status: NotificationStatusEnum.Error,
                 title: 'Error: ',
                 message: `${errorContext} - ${errorReason}`,
            })) 
+        }
+        else if ( status >= 500 ) {
+            console.log('skip');
         }
       
         return Promise.reject(error);
@@ -53,12 +57,30 @@ axiosInstance.interceptors.response.use(
 
 export const generateToken = async () => {
     try {
-        await axiosInstance.get(`api/auth/generate-token`, {
+        await axiosInstance.get(`/auth/generate-token`, {
             withCredentials: true,
         });
     } catch (error) {
         console.error(error);
     }
+};
+
+export const checkTokenExistsOnOpen = async () => {
+   try {
+    const response = await axiosInstance.get(`/auth/me`);
+
+    const data = response.data;
+
+    store.dispatch(authActions.setAuthuser({
+        id: data.id,
+        full_name: data.full_name,
+        username: data.username,
+        profile_pic: data.profile_pic,
+        gender: data.gender,        
+    }));
+   } catch ( error ) {
+    console.error(error);
+   }
 };
 
 export default axiosInstance;

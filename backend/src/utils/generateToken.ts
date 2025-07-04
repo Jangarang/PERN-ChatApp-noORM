@@ -4,10 +4,10 @@ import type { User } from '../db/types.js';
 
 const  generateAccessTokenAndCookie = (user: User, res: Response) => {
     const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET!,  {
-        expiresIn: "2m"
+        expiresIn: "10m"
     });
 
-    console.log('/utils/generateToken access token: ', token);
+    //console.log('/utils/generateToken access token: ', token);
     res.cookie("accessTokenCookie", token, {
         httpOnly: true, // prevent XSS cors site scripting
         sameSite: "strict", // CSRF

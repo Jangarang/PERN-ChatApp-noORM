@@ -4,15 +4,18 @@ import { authActions } from "./auth-slice";
 import { store } from './index';
 
 /** This is automatic logouts and checking on each request?*/
-export const authThunk = async () => {
+export const authThunk = () => {
+    console.log("hellllooooooo")
     return async (dispatch:AppDispatch) => {
+        console.log('ninjaaaa');
         const getAuthUser = async () => {
             const response = await fetch("/api/auth/me", {
                 credentials: "include",
             });
-            
+            console.log('authThunk');
             if (!response.ok) {
-                throw new Error('Could not fetch card data!');
+                console.log('Token expired or user not authenticated'); 
+                return;
             };
 
             const data = await response.json();
@@ -30,12 +33,13 @@ export const authThunk = async () => {
                 profile_pic: authUser.profile_pic,
                 gender:authUser.gender,
             }))
+            dispatch(authActions.setTokenExpiry(authUser.expiry));
         }catch ( error ) {
-            throw new Error(`${error}`);
+            console.log('silent error:',error);
+            //throw new Error(`${error}`);
         };
     };    
 };
-
 
 export const checkTokenExpiryAndLogoutThunk = () => {
   return (dispatch: AppDispatch) => {

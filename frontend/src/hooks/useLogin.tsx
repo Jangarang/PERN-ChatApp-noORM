@@ -1,34 +1,48 @@
 // import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/auth-slice';
+import { uiActions } from '../store/ui-slice';
+import { NotificationStatusEnum } from '../types/enum';
+import axiosInstance from '../utils/apis/apis';
 
 const useLogin = () => {
     const dispatch = useDispatch();
-   
+
     const login = async (username: string, password: string) => {
-        const response = await fetch('/api/auth/login', {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username, password})
-        });
-
-        if (!response.ok) {
-            throw new Error('Could not fetch card data!');
-        };
-
-        const loginData = await response.json();
-        console.log('loginData: ', loginData);
-
-        dispatch(authActions.setAuthuser({
-            id: loginData.id,
-            full_name: loginData.full_name,
-            username: loginData.username,
-            profile_pic: loginData.profile_pic,
-            gender: loginData.gender,
+        dispatch(uiActions.showNotification({
+                status: NotificationStatusEnum.Pending,
+                title: 'Sending...',
+                message: 'Sending cart data'
         }));
+        // const response = await fetch('/api/auth/login', {
+        //     method: "POST",
+        //     headers: {"Content-Type": "application/json"},
+        //     body: JSON.stringify({username, password})
+        // });
+        try{
+            const loginResponse = await axiosInstance.post("/auth/login", {
+                    username: username,
+                    password: password
+                },
+                {
+                    errorContext: 'Login'   
+                }
+            );
+            const data = loginResponse.data;
+            // TODO can make this reusable
+            dispatch(authActions.setAuthuser({
+                id: data.id,
+                full_name: data.full_name,
+                username: data.username,
+                profile_pic: data.profile_pic,
+                gender: data.gender,
+            }));
+            dispatch(authActions.setTokenExpiry(data.expiry));
+            return true;
+        } catch(error) {
+            return false;
+        }
 
-        dispatch(authActions.setTokenExpiry(loginData.expiry))
-        return loginData;    
     };
     return { login }
     
