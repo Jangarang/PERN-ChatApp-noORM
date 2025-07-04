@@ -5,9 +5,7 @@ import { store } from './index';
 
 /** This is automatic logouts and checking on each request?*/
 export const authThunk = () => {
-    console.log("hellllooooooo")
     return async (dispatch:AppDispatch) => {
-        console.log('ninjaaaa');
         const getAuthUser = async () => {
             const response = await fetch("/api/auth/me", {
                 credentials: "include",
@@ -24,17 +22,25 @@ export const authThunk = () => {
         };
 
         try {
+
+            dispatch(authActions.setAuthStatus('loading'));
+
             const authUser = await getAuthUser();
-            console.log('authUser:', authUser);
+            console.log('[auth-actions.ts] authUser:', authUser);
+
             dispatch(authActions.setAuthuser({
                 id: authUser.id,
                 full_name: authUser.full_name,
                 username: authUser.username,
                 profile_pic: authUser.profile_pic,
                 gender:authUser.gender,
-            }))
+            }));
+            //Do I need separate reducer functions for these?
             dispatch(authActions.setTokenExpiry(authUser.expiry));
+            dispatch(authActions.setAuthStatus('fulfilled'));
+
         }catch ( error ) {
+            dispatch(authActions.setAuthStatus('failed'));
             console.log('silent error:',error);
             //throw new Error(`${error}`);
         };

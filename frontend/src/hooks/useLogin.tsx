@@ -13,12 +13,7 @@ const useLogin = () => {
                 status: NotificationStatusEnum.Pending,
                 title: 'Sending...',
                 message: 'Sending cart data'
-        }));
-        // const response = await fetch('/api/auth/login', {
-        //     method: "POST",
-        //     headers: {"Content-Type": "application/json"},
-        //     body: JSON.stringify({username, password})
-        // });
+        })); 
         try{
             const loginResponse = await axiosInstance.post("/auth/login", {
                     username: username,

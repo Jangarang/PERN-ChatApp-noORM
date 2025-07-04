@@ -11,17 +11,23 @@ const useTokenWatcher = (intervalMs = 30_00 ) => {
     const dispatch = useDispatch<AppDispatch>();
     const expired = useSelector((state: RootState) => state.auth.tokenExpiry);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const authStatus = useSelector((state:RootState) => state.auth.authStatus); 
     
     useEffect(()=> {
         console.log("Page Loaded");
-        dispatch(authThunk()); 
+        
+        if (authStatus === 'idle') {
+            dispatch(authThunk()); 
+        };
+
     }, []);
 
     useEffect(()=> {
        if (!isAuthenticated || expired === 0) {
-        console.log("[Hook] Not authenticated or no token expiry set.");
+        console.log("[Hook] Waiting for auth to complete...");
         return;
        }
+       console.log("[Hook] Auth Ready starting expiry checker")
         const interval = setInterval(() => {
             console.log('[Hook] Checking token expiry. Expiry in: ', tokenTimeLeft(expired));
             dispatch(checkTokenExpiryAndLogoutThunk());

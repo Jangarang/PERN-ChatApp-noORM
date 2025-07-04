@@ -11,18 +11,28 @@ interface AuthUser {
 // interface DecodedJWT = {
 
 // }
+export const AuthStatus = {
+    Idle: 'idle',
+    Loading: 'loading',
+    Fulfilled: 'fulfilled',
+    Failed: 'failed'
+} as const;
+
+//HUH?
+export type AuthStatus = typeof AuthStatus[keyof typeof AuthStatus];
 
 interface AuthState {
     authUser: AuthUser | null;
     isAuthenticated: false | true;
-    // accessToken: string | null,
+    authStatus: AuthStatus;
     tokenExpiry: number,
 };
 
-// Correctly typed initial state
+
 const initialState: AuthState = {
     authUser: null,
     isAuthenticated: false, 
+    authStatus: 'idle',
     tokenExpiry: 0,
 };
 
@@ -39,7 +49,11 @@ const authSlice = createSlice({
         setTokenExpiry: (state, action: PayloadAction<number>) => {
            state.tokenExpiry = action.payload; 
         },
+        setAuthStatus: (state, action: PayloadAction<AuthStatus>) =>{
+            state.authStatus = action.payload;
+        },
         logout: (state) => {
+            state.authStatus = 'idle';
             state.authUser = null;
             state.tokenExpiry = 0;
             state.isAuthenticated = false;

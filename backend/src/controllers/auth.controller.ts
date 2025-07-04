@@ -162,7 +162,8 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
         console.log("req.user: ", req.user); 
         let user;
         //const user = await find_username_query(req.user?.id);
-        //I didn't need this?
+        
+        //I don't need this?
         if (req.user && req.user.id) {
             user = await find_by_id_query(req.user?.id);
         }
@@ -177,7 +178,7 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
             username: user.username,
             profilePic: user.profile_pic,
             gender: user.gender,
-            expiry: user.expiry, 
+            expiry: req.user?.expiry, 
         });
     
     } catch ( error: any ) {

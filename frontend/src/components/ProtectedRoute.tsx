@@ -8,9 +8,15 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const authUser = useSelector((state: RootState) => state.auth.authUser);
+    const authUser = useSelector((state: RootState) => state.auth);
 
-    if (!authUser) {
+    if (authUser.authStatus === 'idle' || authUser.authStatus === 'loading') {
+        console.log('loading spinner or something here');
+        // this causes another render RIGHT
+        return <div>Loading...</div>; 
+    }
+
+    if (!authUser.isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
 
