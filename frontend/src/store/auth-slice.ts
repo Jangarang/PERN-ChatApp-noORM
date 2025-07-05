@@ -19,7 +19,6 @@ export type AuthStatus = typeof AuthStatus[keyof typeof AuthStatus];
 
 interface AuthState {
     authUser: AuthUser | null;
-    isAuthenticated: false | true;
     authStatus: AuthStatus;
     tokenExpiry: number,
 };
@@ -27,7 +26,6 @@ interface AuthState {
 
 const initialState: AuthState = {
     authUser: null,
-    isAuthenticated: false, //TODO remove this 
     authStatus: 'loading',
     tokenExpiry: 0,
 };
@@ -39,7 +37,6 @@ const authSlice = createSlice({
         setAuthuser: (state, action: PayloadAction<AuthUser>) => {
             if (action.payload !== null) {
                 state.authUser = action.payload;
-                state.isAuthenticated = true;
                 state.authStatus = 'authenticated'; 
             }
         },
@@ -53,7 +50,6 @@ const authSlice = createSlice({
             state.authStatus = 'unauthenticated';
             state.authUser = null;
             state.tokenExpiry = 0;
-            state.isAuthenticated = false;
         }
     }
 });
